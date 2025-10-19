@@ -47,9 +47,11 @@ class Transformer {
         // final NNUtils.rmsnorm
         int rmsFinalWeightStartPos;
         float[] rmsFinalWeightRow = new float[config.dim()]; // float[][] rmsFinalWeight; // (dim,)
+        boolean rmsFinalWeightRowInitialized = false;
         // (optional) classifier weights for the logits, on the last layer
         int wclsStartPos;
         float[][] wclsMatrix = new float[config.vocabSize()][config.dim()]; // float[][] wcls; // (vocabSize, dim)
+        boolean wclsMatrixInitialized = false;
 
         float[] tokenEmbeddingTableRow(int row) {
             int tokenEmbeddingTableRowPos = tokenEmbeddingTableStartPos + row * config.dim();
@@ -158,18 +160,24 @@ class Transformer {
         }
 
         float[] rmsFinalWeightRow() {
-            for (int col = 0; col < rmsFinalWeightRow.length; col++) {
-                rmsFinalWeightRow[col] = data.get(rmsFinalWeightStartPos + col);
+            if (!rmsFinalWeightRowInitialized) {
+                for (int col = 0; col < rmsFinalWeightRow.length; col++) {
+                    rmsFinalWeightRow[col] = data.get(rmsFinalWeightStartPos + col);
+                }
+                rmsFinalWeightRowInitialized = true;
             }
 
             return rmsFinalWeightRow;
         }
 
         float[][] wclsMatrix() {
-            for (int i = 0; i < config.vocabSize(); i++) {
-                for (int j = 0; j < config.dim(); j++) {
-                    wclsMatrix[i][j] = data.get(wclsStartPos + i * config.dim() + j);
+            if (!wclsMatrixInitialized) {
+                for (int i = 0; i < config.vocabSize(); i++) {
+                    for (int j = 0; j < config.dim(); j++) {
+                        wclsMatrix[i][j] = data.get(wclsStartPos + i * config.dim() + j);
+                    }
                 }
+                wclsMatrixInitialized = true;
             }
 
             return wclsMatrix;
