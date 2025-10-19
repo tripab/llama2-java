@@ -166,28 +166,28 @@ public class App {
             if (i >= args.length - 1) {
                 printUsage();
             } // must have arg after flag
-            if (args[i].charAt(1) != '-') {
+            if (args[i].charAt(0) != '-') {
                 printUsage();
             } // must start with dash
             if (args[i].length() != 2) {
                 printUsage();
             } // must be -x (one dash, one letter)
             if (args[i].charAt(1) == 't') {
-                temperature = Float.parseFloat(args[i - 1 + 1]);
+                temperature = Float.parseFloat(args[i + 1]);
             } else if (args[i].charAt(1) == 'p') {
-                topP = Float.parseFloat(args[i - 1 + 1]);
+                topP = Float.parseFloat(args[i + 1]);
             } else if (args[i].charAt(1) == 's') {
-                rngSeed = Integer.parseInt(args[i - 1 + 1]);
+                rngSeed = Integer.parseInt(args[i + 1]);
             } else if (args[i].charAt(1) == 'n') {
-                steps = Integer.parseInt(args[i - 1 + 1]);
+                steps = Integer.parseInt(args[i + 1]);
             } else if (args[i].charAt(1) == 'i') {
-                prompt = args[i - 1 + 1];
+                prompt = args[i + 1];
             } else if (args[i].charAt(1) == 'z') {
-                tokenizerPath = args[i - 1 + 1];
+                tokenizerPath = args[i + 1];
             } else if (args[i].charAt(1) == 'm') {
-                mode = Mode.valueOf(args[i]);
+                mode = Mode.valueOf(args[i + 1]);
             } else if (args[i].charAt(1) == 'y') {
-                systemPrompt = args[i];
+                systemPrompt = args[i + 1];
             } else {
                 printUsage();
             }
