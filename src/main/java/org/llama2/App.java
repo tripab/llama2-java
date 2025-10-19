@@ -217,7 +217,6 @@ public class App {
                 // build the Tokenizer via the tokenizer .bin file
                 Tokenizer tokenizer = new Tokenizer(tokenizerPath, transformer.config.vocabSize());
                 // build the Sampler
-                rngSeed = 1024;
                 Sampler sampler = new Sampler(transformer.config.vocabSize(), temperature, topP, rngSeed);
 
                 // run!
