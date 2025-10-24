@@ -147,7 +147,7 @@ public class Tokenizer {
             final String SINGLE_SPACE = " ";
             int dummyPrefix = Arrays.binarySearch(sortedVocab, new TokenIndex(SINGLE_SPACE, -1),
                     Comparator.comparing(TokenIndex::str));
-            tokens[nTokens++] = dummyPrefix;
+            tokens[nTokens++] = sortedVocab[dummyPrefix].id();
         }
 
         // Okay UTF-8 time. This will get messy. Here is the reference from Wikipedia:
@@ -182,8 +182,9 @@ public class Tokenizer {
             }
 
             // ok c+1 is not a continuation byte, so we've read in a full codepoint
-            int id = Arrays.binarySearch(sortedVocab, new TokenIndex(strBuffer.toString(), -1),
+            int index = Arrays.binarySearch(sortedVocab, new TokenIndex(strBuffer.toString(), -1),
                     Comparator.comparing(TokenIndex::str));
+            int id = index >= 0 ? sortedVocab[index].id() : -1;
             if (id != -1) {
                 // we found this codepoint in vocab, add it as a token
                 tokens[nTokens++] = id;
@@ -206,11 +207,13 @@ public class Tokenizer {
 
             for (int i = 0; i < nTokens - 1; i++) {
                 // check if we can merge the pair (tokens[i], tokens[i+1])
+                strBuffer.setLength(0);
                 strBuffer.append(vocab[tokens[i]])
                         .append(vocab[tokens[i + 1]]);
-                int id = Arrays.binarySearch(sortedVocab, new TokenIndex(strBuffer.toString(), -1),
+                int index = Arrays.binarySearch(sortedVocab, new TokenIndex(strBuffer.toString(), -1),
                         Comparator.comparing(TokenIndex::str));
-                if (id != -1 && vocabScores[id] > bestScore) {
+                int id = index >= 0 ? sortedVocab[index].id() : -1;
+                if (id >= 0 && vocabScores[id] > bestScore) {
                     // this merge pair exists in vocab! record its score and position
                     bestScore = vocabScores[id];
                     bestId = id;
